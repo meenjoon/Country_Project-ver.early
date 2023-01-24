@@ -36,19 +36,21 @@ class MainActivity : AppCompatActivity() {
                         val CountryList = ArrayList<Recyclerview_Model>()
 
                         /*
-
+                            Countries API로 부터 가져온 데이터 파싱
                          */
 //                        val officialName = it.forEach {  it.name.toString().substring(14, it.name.toString().length-1) }
 //                        val capital = it.forEach { it.capital.toString().substring(1,it.capital.toString().length-1) }
-//                        val korName =  it.forEach { it.translations?.kor.toString().substring(13,it.translations?.kor.toString().length-1)}
+//                        val korName_common =  it.forEach { it.translations?.kor.toString().substring(13,it.translations?.kor.toString().length-1)}
 //                        val picture = it.forEach { it.flags?.png.toString() }
 
 
                         it.forEach { CountryList.add(Recyclerview_Model(
-                            it.capital.toString().substring(1,it.capital.toString().length-1)
-                            ,it.name.toString().substring(14, it.name.toString().length-1)
-                            ,it.translations?.kor.toString().substring(13,it.translations?.kor.toString().length-1)
-                            ,it.flags?.png.toString()))
+                            it.capital.toString().substring(1,it.capital.toString().length-1) // 수도 이름
+                            ,it.name.toString().substring(14, it.name.toString().length-1) // 공식 이름
+//                            ,it.translations?.kor.toString().substring(13,it.translations?.kor.toString().length-1) // official 한국 이름
+                            ,it.translations?.kor?.korName_Common.toString() // 흔한 한국 이름
+                            ,it.flags?.png.toString())) //국기 png
+
                         }
 
                         setAdapter(CountryList)
@@ -60,10 +62,7 @@ class MainActivity : AppCompatActivity() {
             override fun onFailure(call: Call<Country_Response>, t: Throwable) {
                 Log.d("this is error", t.message!! )
             }
-
         })
-
-
     }
 
 
