@@ -5,5 +5,9 @@ import com.google.gson.annotations.SerializedName
 
 data class Kor(
     @SerializedName("official")
-    val official: String?
+    val korName_Official: String?,
+
+    @SerializedName("common")
+    val korName_Common: String?
+
 )
