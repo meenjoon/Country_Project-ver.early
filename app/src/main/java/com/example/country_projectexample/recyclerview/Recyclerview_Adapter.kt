@@ -4,13 +4,11 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.country_projectexample.R
-import com.example.country_projectexample.datamodel.Country_ResponseItem
 
 class Recyclerview_Adapter(val context: Context, private val item: ArrayList<Recyclerview_Model>
 ) : RecyclerView.Adapter<Recyclerview_Adapter.ViewHolder>() {
@@ -24,7 +22,7 @@ class Recyclerview_Adapter(val context: Context, private val item: ArrayList<Rec
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = item[position]
         val listener = View.OnClickListener { it ->
-            Toast.makeText(it.context, "Clicked -> name : ${item.name.toString()}, capital : ${item.capital} name_eng : ${item.translations?.toString()} capital : ${item.capital}",Toast.LENGTH_SHORT).show()
+            Toast.makeText(it.context, "Clicked -> name : ${item.enName_Official.toString()}, capital : ${item.capital} name_eng : ${item.korName_Common?.toString()} capital : ${item.capital}",Toast.LENGTH_SHORT).show()
         }
         holder.apply {
             bind(listener, item, context)
@@ -41,8 +39,8 @@ class Recyclerview_Adapter(val context: Context, private val item: ArrayList<Rec
         private var view: View = v
 
         fun bind(listener: View.OnClickListener, item: Recyclerview_Model, context: Context) {
-            view.findViewById<TextView>(R.id.name_Kor).text = item.translations
-            view.findViewById<TextView>(R.id.name_Eng).text = item.name
+            view.findViewById<TextView>(R.id.name_Kor).text = item.korName_Common
+            view.findViewById<TextView>(R.id.name_Eng).text = item.enName_Official
             view.findViewById<TextView>(R.id.capital).text = item.capital
             Glide.with(context)
                 .load(item.flags)
