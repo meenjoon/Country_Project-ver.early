@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 
 data class Name(
     @SerializedName("official")
-    val official: String?
+    val enName_Official: String?
 )
