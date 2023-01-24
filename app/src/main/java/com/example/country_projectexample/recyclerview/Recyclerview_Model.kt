@@ -4,9 +4,9 @@ data class Recyclerview_Model(
 
     val capital: String,
 
-    val name: String?,
+    val enName_Official: String?,
 
-    val translations: String?,
+    val korName_Common: String?,
 
     val flags: String?
 )
