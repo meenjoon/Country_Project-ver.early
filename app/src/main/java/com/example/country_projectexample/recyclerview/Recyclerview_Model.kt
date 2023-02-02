@@ -8,5 +8,7 @@ data class Recyclerview_Model(
 
     val korName_Common: String?,
 
-    val flags: String?
+    val flags: String?,
+
+    val enName_Common: String?,
 )
