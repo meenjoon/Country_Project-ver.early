@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">Country_Project(Example)</string>
+    <string name="title_activity_countries_detail">CountriesDetail</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="nativeName_Common">현지이름</string>
+    <string name="continent">지역(대륙)</string>
+    <string name="cioc">국가코드</string>
+    <string name="capital">수도</string>
+    <string name="population">인구수</string>
+    <string name="currency">통화</string>
+    <string name="language">언어</string>
+    <string name="appName">국가정보 어플</string>
+    <string name="kornName_Common">korName_Common</string>
+    <string name="enName_Official">enName_Official</string>
+    <string name="error">Error</string>
 </resources>
