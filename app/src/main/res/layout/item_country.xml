@@ -21,23 +21,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
-            android:textSize="21dp"
+            android:textSize="21sp"
             android:textStyle="bold"
-            android:text="Country"/>
+            android:text="@string/kornName_Common"/>
         <TextView
             android:id="@+id/name_Eng"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:textStyle="bold"
-            android:text="Country"/>
+            android:text="@string/enName_Official"/>
 
         <TextView
             android:id="@+id/capital"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14dp"
-            android:text="수도 : Capital"/>
+            android:textSize="14sp"
+            android:text="@string/capital"/>
     </LinearLayout>
 </LinearLayout>
