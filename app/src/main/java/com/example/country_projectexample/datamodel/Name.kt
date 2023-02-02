@@ -5,5 +5,10 @@ import com.google.gson.annotations.SerializedName
 
 data class Name(
     @SerializedName("official")
-    val enName_Official: String?
+    val enName_Official: String?,
+
+    @SerializedName("common")
+    val enName_Common: String?
+
+
 )
