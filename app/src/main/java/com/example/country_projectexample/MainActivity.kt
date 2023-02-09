@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.country_projectexample.databinding.ActivityMainBinding
 import com.example.country_projectexample.datamodel.Country_Response
 import com.example.country_projectexample.recyclerview.Recyclerview_Model
 import com.example.country_projectexample.recyclerview.Recyclerview_Adapter
@@ -14,27 +15,37 @@ import com.example.country_projectexample.retrofit.CountriesService.retrofitServ
 import retrofit2.Call
 import retrofit2.Response
 
-
+// <viewBinding 적용 버전>
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding : ActivityMainBinding
 
     lateinit var RecyclerviewAdapter: Recyclerview_Adapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.hide()
-        setContentView(R.layout.activity_main)
+        supportActionBar?.hide() //app theme 숨기기
 
-        val searchView = findViewById<SearchView>(R.id.searchView)
+        binding = ActivityMainBinding.inflate(layoutInflater) //ViewBinding을 통한 바인딩
+        val view = binding.root
+        setContentView(view)
+
+        val searchView = binding.searchView
+
+        val searchViewTextListener: SearchView.OnQueryTextListener =
+            object : SearchView.OnQueryTextListener{
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    Log.d("Recyclerview", "newText: $newText")
+                    RecyclerviewAdapter.filter.filter(newText)
+                    return true
+                }
+            }
 
         searchView.setOnQueryTextListener(searchViewTextListener)
-
-
-//        val CountryList = ArrayList<Recyclerview_Model>()
-//        CountryList.add(Recyclerview_Model("서울","Republic Of Korea","대한민국","국기","Korea"))
-//        CountryList.add(Recyclerview_Model("서울","Republic Of Korea","미국","국기","Korea"))
-//        CountryList.add(Recyclerview_Model("서울","Republic Of Korea","멕시코","국기","Korea"))
-//        CountryList.add(Recyclerview_Model("서울","Republic Of Korea","아프리카","국기","Korea"))
-//        setAdapter(CountryList)
 
 
         /*
@@ -67,9 +78,9 @@ class MainActivity : AppCompatActivity() {
 //                        val flag = it.forEach { it.flags?.png.toString() }
 //                        val enName_Common = it.forEach { it.name?.enName_Common.toString() }
 
-
                         /*리사이클러뷰에 연결을 위한 데이터모델인 CountryList에 (capital, enName_Official, korName_common, flag, enName_Common)을 넣어준다.
                         */
+
                         it.forEach {
                             CountryList.add(Recyclerview_Model(
                             it.capital.toString().substring(1,it.capital.toString().length-1) // 수도 이름
@@ -97,23 +108,11 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setAdapter(CountryList : ArrayList<Recyclerview_Model>) {
 
-        val recyclerview = findViewById<RecyclerView>(R.id.countriesList) //xml의 리사이클러뷰 아이템 부분 인스턴스 획득
+        val recyclerview = binding.countriesList //xml의 리사이클러뷰 아이템 부분 인스턴스 획득
+
         RecyclerviewAdapter = Recyclerview_Adapter(this, CountryList ) //리사이클러뷰 어댑터 인스턴스를 생성해주기 위해 매개변수인 context와 리사이클러뷰 데이터 모델인 Recyclerview_Model을 매개변수로 받는다.
         recyclerview.adapter = RecyclerviewAdapter //xml 리사이클러뷰의 인스턴스의 내부 함수인 .adapter 함수를 통해 만든 어댑터 인스턴스 연결해주기
         recyclerview.layoutManager = LinearLayoutManager(this) //수평,수직으로 배치시켜주는 레이아웃 매니저 설정
-
     }
 
-    var searchViewTextListener: SearchView.OnQueryTextListener =
-        object : SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                Log.d("Recyclerview", "newText: $newText")
-                RecyclerviewAdapter.filter.filter(newText)
-                return true
-            }
-        }
 }
