@@ -11,17 +11,20 @@ import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.country_projectexample.CountriesDetail
 import com.example.country_projectexample.R
+import com.example.country_projectexample.databinding.ItemCountryBinding
 
+
+// <viewBinding 적용 버전>
 class Recyclerview_Adapter(val context: Context, private var item: ArrayList<Recyclerview_Model>
 ) : RecyclerView.Adapter<Recyclerview_Adapter.ViewHolder>(), Filterable {
 
     val unfilterList = item //필터링을 하지 않은 원본 데이터 ArrayList를 한 개 만들어 놓는다.
     var filterList = item //원본 데이터를 복사한 필터링 데이터 ArrayList를 한 개 만들어 놓는다.
-
 
     /*
         항목에 사용할 View를 생성함
@@ -29,30 +32,43 @@ class Recyclerview_Adapter(val context: Context, private var item: ArrayList<Rec
         return 값으로 ViewHoler의 생성자에 view 객체를 넘겨준다.
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflatedView = LayoutInflater.from(parent.context).inflate(R.layout.item_country,parent,false)
-        return Recyclerview_Adapter.ViewHolder(inflatedView)
+        val inflatedView = ItemCountryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ViewHolder(inflatedView)
     }
 
     /*
         생성된 ViewHolder에 데이터를 바인딩(연결) 해주는 함수이다.
-        ViewHodel내에 정의되어 있는 bind()함수를 적용시켜주어야 하는데, 이때 apply{} 람다 함수를 통해 적용시켜준다.
-        bind()함수에 넣어줄 생성자 매개변수 값은 (view.ClickListener, 필터링 ArrayList, 리사이클러뷰를 사용할 Activity의 Context)를 넣어준다.
+
+        리사이클러뷰 아이템 View에 직접 데이터를 넣는 부분이다.
+        여기서 햇갈리지 않아야 하는 부분은 item인데, item은 필터링 데이터 ArrayList이다.
+        즉, 필터링 데이터 ArrayList를 ViewHolder를 통해 view를 연결해준 곳에 데이터를 넣는 곳이다.(모든 데이터가 들어있는 원본데이터가 아니라)
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = filterList[position]
-        val listener = View.OnClickListener { it ->
-            Toast.makeText(it.context, "Clicked -> name : ${item.enName_Official.toString()}, capital : ${item.capital} name_eng : ${item.korName_Common?.toString()} capital : ${item.capital}",Toast.LENGTH_SHORT).show()
-        }
-        holder.apply {
-            bind(listener, item, context)
-            itemView.tag = item
-        }
 
+        holder.name_Kor.text = item.korName_Common
+        holder.name_Eng.text = item.enName_Official
+        holder.capital.text = item.capital
+
+        Glide.with(context)
+            .load(item.flags)
+            .into(holder.imageView)
+
+        holder.imageView.setOnClickListener {
+
+            val intent = Intent(context, CountriesDetail::class.java)
+            intent.putExtra("enName_Common","${item.enName_Common}") //enName_Common
+            intent.putExtra("enName_Official","${item.enName_Official}")
+            intent.putExtra("korName_Common","${item.korName_Common}")
+            intent.putExtra("flag","${item.flags}")
+
+            intent.run { context.startActivity(this) }
+        }
     }
 
     /*
         아이템의 개수를 가져온다.
-        나는 return 값으로 필터링 데이터 ArrayList의 개수를 가져온다.
+        나는 커스텀을 하여 return 값으로 필터링 데이터 ArrayList의 개수를 가져온다.
      */
     override fun getItemCount(): Int {
         return filterList.size
@@ -66,40 +82,12 @@ class Recyclerview_Adapter(val context: Context, private var item: ArrayList<Rec
         예를들어, 실제로 모두 보여지게 될 데이터 ArrayList의 사이즈가 100이라고 치면, 어쨌든 한 화면 5개 까지만의 데이터를 표현할 수 밖에 없다.
         이때 실제로 만들어지는 리스트는 100이 아니라 화면에 보여지는 개수인 5개만 만들어진다는 것이다. ==> ListView와 비교했을 때 효율성 극대화
         요약하자면, ViewHolder는 ListView/RecyclerView를 구현할 때 성능향상을 목적으로 View를 재사용하는 객체(방법)이다.
-        그 방법으로는 inflate 및 findViewById()의 호출을 줄이는 원리에 있다.
-
      */
-    class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
-        private var view: View = v
-
-        /*
-            리사이클러뷰 아이템 View에 직접 데이터를 넣는 부분이다.
-            여기서 햇갈리지 않아야 하는 부분은 item인데, item은 필터링 데이터 ArrayList이다.
-            즉, 필터링 데이터 ArrayList를 view에 연결해주는 것이다.(모든 데이터가 들어있는 원본데이터가 아니라)
-         */
-        fun bind(listener: View.OnClickListener, item: Recyclerview_Model, context: Context) {
-            view.findViewById<TextView>(R.id.name_Kor).text = item.korName_Common
-            view.findViewById<TextView>(R.id.name_Eng).text = item.enName_Official
-            view.findViewById<TextView>(R.id.capital).text = item.capital
-            Glide.with(context)
-                .load(item.flags)
-                .into(view.findViewById(R.id.imageView))
-
-            /*
-            필터링된 itemView를 클릭을 하게되면,
-            Intent를 통해 CountriesDetail 클래스로 클릭한 itemView의 정보를 넘긴다.
-             */
-            itemView.setOnClickListener {
-
-                val intent = Intent(context, CountriesDetail::class.java)
-                intent.putExtra("enName_Common","${item.enName_Common}")
-                intent.putExtra("enName_Official","${item.enName_Official}")
-                intent.putExtra("korName_Common","${item.korName_Common}")
-                intent.putExtra("flag","${item.flags}")
-
-                intent.run { context.startActivity(this) }
-            }
-        }
+    class ViewHolder(binding: ItemCountryBinding) : RecyclerView.ViewHolder(binding.root) {
+        val name_Kor = binding.nameKor
+        val name_Eng = binding.nameEng
+        val capital = binding.capital
+        val imageView = binding.imageView
     }
 
     /*
@@ -116,9 +104,9 @@ class Recyclerview_Adapter(val context: Context, private var item: ArrayList<Rec
                 여기서 charSequence 변수는 내가 입력한 Char(값)라고 생각하면 편하다.
                 results 변수는 FilterResults 를 인스턴스화 시켜준 값이라고 생각하면 편하다.
              */
-            override fun performFiltering(charSequence: CharSequence?): Filter.FilterResults {
+            override fun performFiltering(charSequence: CharSequence?): FilterResults {
                 val filterString = charSequence.toString()
-                val results = Filter.FilterResults()
+                val results = FilterResults()
                 Log.d("Recyclerview", "charSequence: $charSequence")
 
                 /*
@@ -160,8 +148,6 @@ class Recyclerview_Adapter(val context: Context, private var item: ArrayList<Rec
             }
         }
     }
-
-
 }
 
 
