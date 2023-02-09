@@ -9,10 +9,11 @@ data class Country_ResponseItem_Detail(
     val capital: List<String>?,
     @SerializedName("cioc")
     val cioc: String?,
+    @SerializedName("cca3")
+    val cca3: String?,
     @SerializedName("currencies")
     val currencies: Currencies?,
     @SerializedName("languages")
-    @Expose
     val languages: Languages?,
     @SerializedName("name")
     val name: Name?,
